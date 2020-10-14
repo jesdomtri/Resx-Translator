@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from googletrans import Translator
-import tkinter
+from tkinter import *
+from tkinter import filedialog
 import re
 import time
 
@@ -54,12 +55,58 @@ def translate_file_function(originalFile, newFile, language):
             newFile.write(line)
 
 
+def ventana_principal():
+
+    def browse_file():
+        file_dialog = filedialog.askopenfilename(
+            initialdir="/", title="Select a File", filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
+        label_file_explorer.configure(text="File Opened: " + file_dialog)
+
+    root = Tk()
+    root.geometry('350x200')
+    root.title("Resx Translator")
+    menubar = Menu(root)
+    select_language = Menu(root)
+
+    menubar.add_command(label="Translate")
+
+    menubar.add_separator()
+
+    select_language.add_command(label="Spanish")
+    select_language.add_command(label="English")
+    select_language.add_command(label="Deutsch")
+    select_language.add_command(label="French")
+
+    menubar.add_cascade(label="Select language", menu=select_language)
+
+    menubar.add_separator()
+
+    menubar.add_command(label="Quit", command=root.quit)
+
+    label_file_explorer = Label(root,
+                                text="File Explorer using Tkinter",
+                                width=100, height=4,
+                                fg="blue")
+
+    label_file_explorer.grid(column=1, row=1)
+
+    name_file = Entry(root, width=30)
+    name_file.grid(column=0, row=0)
+
+    button_search_file = Button(root, text="Search")
+    button_search_file.grid(column=1, row=0)
+
+    root.config(menu=menubar)
+    root.mainloop()
+
+
 if __name__ == "__main__":
     start_time = time.time()
     languages = ['es', 'es-AR', 'es-cl', 'es-UY', 'es-CO', 'es-ec',
                  'es-pa', 'es-PE', 'es-VE', 'en', 'de', 'fr', 'it', 'pt']
     try:
-        loop_files_function('Default', languages)
+        ventana_principal()
+        #loop_files_function('Default', languages)
     except:
         print('HA HABIDO UN ERROR, BRO')
     print("TIEMPO TOTAL: --- %s seconds ---" % (time.time() - start_time))
