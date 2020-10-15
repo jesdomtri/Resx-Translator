@@ -7,6 +7,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 import re
 import time
+import logging
 
 
 def translate_text_function(line, dst):
@@ -31,7 +32,10 @@ def loop_files_function(title, languages):
             else:
                 messagebox.showwarning(
                     "Warning", "You have to select any file before translate.")
-    except:
+    except Exception as e:
+        logging.basicConfig(filename='app.log', filemode='w',
+                            format='%(name)s - %(levelname)s - %(message)s\n')
+        logging.warning(e)
         messagebox.showerror(
             "Error", "An unexpected error has occurred.\nContact the creator of this application: jesdomtri@gmail.com")
 
