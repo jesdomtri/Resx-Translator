@@ -72,7 +72,6 @@ def browse_file(file_name_to_translate):
     file_dialog = filedialog.askopenfilename(
         initialdir="/", title="Select a File", filetypes=(("Resx files", "*.resx*"), ("all files", "*.*")))
     file_name_to_translate.set(file_dialog)
-    print(file_name_to_translate.get().split('/')[-1].split('.')[0])
 
 
 def select_languages(languages, extension):
@@ -84,10 +83,11 @@ def select_languages(languages, extension):
 
 def ventana_principal():
     root = tk.Tk()
+    root.eval('tk::PlaceWindow . center')
     root.title("Resx Translator")
 
     frame = tk.Frame(root)
-    frame.grid(column=0, row=0)
+    frame.grid(column=0, row=0, padx=5, pady=5)
 
     languages = []
 
@@ -108,63 +108,63 @@ def ventana_principal():
     language_no = tk.IntVar()
 
     tk.Checkbutton(frame, text="Spanish", variable=language_es, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es')).grid(column=0, row=0)
+                   offvalue=0, command=lambda: select_languages(languages, 'es')).grid(column=0, row=0, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-AR", variable=language_es_ar, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-AR')).grid(column=0, row=1)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-AR')).grid(column=0, row=1, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-CL", variable=language_es_cl, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-cl')).grid(column=0, row=2)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-cl')).grid(column=0, row=2, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-UY", variable=language_es_uy, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-UY')).grid(column=0, row=3)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-UY')).grid(column=0, row=3, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-CO", variable=language_es_co, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-CO')).grid(column=0, row=4)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-CO')).grid(column=0, row=4, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-EC", variable=language_es_ec, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-ec')).grid(column=0, row=5)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-ec')).grid(column=0, row=5, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-PA", variable=language_es_pa, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-pa')).grid(column=1, row=0)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-pa')).grid(column=1, row=0, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-PE", variable=language_es_pe, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-PE')).grid(column=1, row=1)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-PE')).grid(column=1, row=1, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish-VE", variable=language_es_ve, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-VE')).grid(column=1, row=2)
+                   offvalue=0, command=lambda: select_languages(languages, 'es-VE')).grid(column=1, row=2, sticky='W')
 
     tk.Checkbutton(frame, text="English", variable=language_en, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'en')).grid(column=1, row=3)
+                   offvalue=0, command=lambda: select_languages(languages, 'en')).grid(column=1, row=3, sticky='W')
 
     tk.Checkbutton(frame, text="Deutsche", variable=language_de, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'de')).grid(column=1, row=4)
+                   offvalue=0, command=lambda: select_languages(languages, 'de')).grid(column=1, row=4, sticky='W')
 
     tk.Checkbutton(frame, text="French", variable=language_fr, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'fr')).grid(column=1, row=5)
+                   offvalue=0, command=lambda: select_languages(languages, 'fr')).grid(column=1, row=5, sticky='W')
 
     tk.Checkbutton(frame, text="Italian", variable=language_it, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'it')).grid(column=2, row=0)
+                   offvalue=0, command=lambda: select_languages(languages, 'it')).grid(column=2, row=0, sticky='W')
 
     tk.Checkbutton(frame, text="Portuguese", variable=language_pt, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'pt')).grid(column=2, row=1)
+                   offvalue=0, command=lambda: select_languages(languages, 'pt')).grid(column=2, row=1, sticky='W')
 
     tk.Checkbutton(frame, text="Norwegian", variable=language_no, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'no')).grid(column=2, row=2)
+                   offvalue=0, command=lambda: select_languages(languages, 'no')).grid(column=2, row=2, sticky='W')
 
     file_name_to_translate = tk.StringVar()
 
     name_file = tk.Entry(
-        root, width=50, textvariable=file_name_to_translate)
-    name_file.grid(column=0, row=1)
+        root, width=40, textvariable=file_name_to_translate)
+    name_file.grid(column=0, row=1, padx=5, pady=5)
 
     button_search_file = tk.Button(
         root, text="Search", command=lambda: browse_file(file_name_to_translate))
-    button_search_file.grid(column=1, row=1)
+    button_search_file.grid(column=1, row=1, padx=5, pady=5)
 
     button_translate = tk.Button(
         root, text="Translate", command=lambda: loop_files_function(file_name_to_translate.get().split('/')[-1].split('.')[0], languages))
-    button_translate.grid(column=0, row=2)
+    button_translate.grid(column=0, row=2, padx=5, pady=5)
 
     root.mainloop()
 
