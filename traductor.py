@@ -23,8 +23,8 @@ def loop_files_function(title, languages):
             start_time = time.time()
             for language in languages:
                 create_file_function(title, language)
-            messagebox.showinfo("Translation completed", "Translations completed successfully in %s seconds." % (
-                time.time() - start_time))
+            messagebox.showinfo("Translation completed", "Translations completed successfully in %s seconds." % str(
+                round((time.time() - start_time), 4)))
         else:
             if len(languages) == 0 and title != '':
                 messagebox.showwarning(
@@ -37,7 +37,7 @@ def loop_files_function(title, languages):
                             format='%(name)s - %(levelname)s - %(message)s\n')
         logging.warning(e)
         messagebox.showerror(
-            "Error", "An unexpected error has occurred.\nContact the creator of this application: jesdomtri@gmail.com")
+            "Error", "An unexpected error has occurred. A log was created.\nContact the creator of this application: jesdomtri@gmail.com")
 
 
 def create_file_function(title, language):
