@@ -74,7 +74,7 @@ def translate_file_function(originalFile, newFile, language):
 
 def browse_file(file_name_to_translate):
     file_dialog = filedialog.askopenfilename(
-        initialdir="/", title="Select a File", filetypes=(("Resx files", "*.resx*"), ("all files", "*.*")))
+        initialdir="/", title="Select a File", filetypes=(("Resx files", "*.aspx.resx*"), ("all files", "*.*")))
     file_name_to_translate.set(file_dialog)
 
 
@@ -167,7 +167,7 @@ def ventana_principal():
     button_search_file.grid(column=1, row=1, padx=5, pady=5)
 
     button_translate = tk.Button(
-        root, text="Translate", command=lambda: loop_files_function(file_name_to_translate.get().split('/')[-1].split('.')[0], languages))
+        root, text="Translate", command=lambda: loop_files_function(file_name_to_translate.get().split('.aspx.resx')[0], languages))
     button_translate.grid(column=0, row=2, padx=5, pady=5)
 
     root.mainloop()
