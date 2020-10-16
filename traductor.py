@@ -85,13 +85,26 @@ def select_languages(languages, extension):
         languages.append(extension)
 
 
+def select_all_languages(all_languages):
+    all_pressed = True
+    for language in all_languages:
+        if language.get() == 1:
+            all_pressed = False
+    if all_pressed:
+        for language in all_languages:
+            language.set(1)
+    else:
+        for language in all_languages:
+            language.set(0)
+
+
 def ventana_principal():
     root = tk.Tk()
     root.eval('tk::PlaceWindow . center')
     root.title("Resx Translator")
 
     frame = tk.Frame(root)
-    frame.grid(column=0, row=0, padx=5, pady=5)
+    frame.grid(column=0, row=1, padx=5, pady=5)
 
     languages = []
 
@@ -110,6 +123,14 @@ def ventana_principal():
     language_fr = tk.IntVar()
     language_pt = tk.IntVar()
     language_no = tk.IntVar()
+
+    all_languages = [language_es, language_es_ar, language_es_cl, language_es_uy, language_es_co,
+                     language_es_ec, language_es_pa, language_es_pe, language_es_ve, language_en,
+                     language_de, language_it, language_fr, language_pt, language_no]
+
+    button_select_all = tk.Button(
+        root, text="Select all", command=lambda: select_all_languages(all_languages))
+    button_select_all.grid(column=0, row=0, padx=5, pady=5, sticky='W')
 
     tk.Checkbutton(frame, text="Spanish", variable=language_es, onvalue=1,
                    offvalue=0, command=lambda: select_languages(languages, 'es')).grid(column=0, row=0, sticky='W')
@@ -160,15 +181,15 @@ def ventana_principal():
 
     name_file = tk.Entry(
         root, width=40, textvariable=file_name_to_translate)
-    name_file.grid(column=0, row=1, padx=5, pady=5)
+    name_file.grid(column=0, row=2, padx=5, pady=5)
 
     button_search_file = tk.Button(
         root, text="Search", command=lambda: browse_file(file_name_to_translate))
-    button_search_file.grid(column=1, row=1, padx=5, pady=5)
+    button_search_file.grid(column=1, row=2, padx=5, pady=5)
 
     button_translate = tk.Button(
         root, text="Translate", command=lambda: loop_files_function(file_name_to_translate.get().split('.aspx.resx')[0], languages))
-    button_translate.grid(column=0, row=2, padx=5, pady=5)
+    button_translate.grid(column=0, row=3, padx=5, pady=5)
 
     root.mainloop()
 
