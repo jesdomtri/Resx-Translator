@@ -26,3 +26,4 @@ build/traductor/Tree-00.toc
 build/traductor/Tree-01.toc
 build/traductor/warn-traductor.txt
 build/traductor/xref-traductor.html
+__pycache__/Translator.cpython-39.pyc
