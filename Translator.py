@@ -17,8 +17,9 @@ def translate_text_function(line, dst):
     return value
 
 
-def loop_files_function(title, languages):
+def loop_files_function(title, extension_languages, variables_languages):
     try:
+        languages = check_languages(extension_languages, variables_languages)
         if len(languages) > 0 and title != '':
             start_time = time.time()
             for language in languages:
@@ -78,24 +79,20 @@ def browse_file(file_name_to_translate):
     file_name_to_translate.set(file_dialog)
 
 
-def select_languages(languages, extension):
-    if extension in languages:
-        languages.remove(extension)
-    else:
-        languages.append(extension)
+def select_languages(variables_languages, extension_languages):
+    for i in range(len(variables_languages)):
+        variables_languages[i].set(1)
 
 
-def select_all_languages(all_languages):
-    all_pressed = True
-    for language in all_languages:
-        if language.get() == 1:
-            all_pressed = False
-    if all_pressed:
-        for language in all_languages:
-            language.set(1)
-    else:
-        for language in all_languages:
-            language.set(0)
+def deselect_languages(variables_languages, extension_languages):
+    for i in range(len(variables_languages)):
+        variables_languages[i].set(0)
+
+
+def check_languages(extension_languages, variables_languages):
+    languages = [extension_languages[i] for i in range(
+        len(extension_languages)) if variables_languages[i].get() == 1]
+    return languages
 
 
 def ventana_principal():
@@ -106,76 +103,36 @@ def ventana_principal():
     frame = tk.Frame(root)
     frame.grid(column=0, row=1, padx=5, pady=5)
 
-    languages = []
+    frame_top = tk.Frame(root)
+    frame_top.grid(column=0, row=0, padx=5, pady=5, sticky='W')
 
-    language_es = tk.IntVar()
-    language_es_ar = tk.IntVar()
-    language_es_cl = tk.IntVar()
-    language_es_uy = tk.IntVar()
-    language_es_co = tk.IntVar()
-    language_es_ec = tk.IntVar()
-    language_es_pa = tk.IntVar()
-    language_es_pe = tk.IntVar()
-    language_es_ve = tk.IntVar()
-    language_en = tk.IntVar()
-    language_de = tk.IntVar()
-    language_it = tk.IntVar()
-    language_fr = tk.IntVar()
-    language_pt = tk.IntVar()
-    language_no = tk.IntVar()
+    name_languages = ["Spanish", "Spanish-AR", "Spanish-CL", "Spanish-UY", "Spanish-CO", "Spanish-EC", "Spanish-PA",
+                      "Spanish-PE", "Spanish-VE", "English", "Deutsche", "French", "Italian", "Portuguese", "Norwegian"]
 
-    all_languages = [language_es, language_es_ar, language_es_cl, language_es_uy, language_es_co,
-                     language_es_ec, language_es_pa, language_es_pe, language_es_ve, language_en,
-                     language_de, language_it, language_fr, language_pt, language_no]
+    extension_languages = ['es', 'es-AR', 'es-cl', 'es-UY', 'es-CO',
+                           'es-ec', 'es-pa', 'es-PE', 'es-VE', 'en', 'de', 'fr', 'it', 'pt', 'no']
+
+    variables_languages = [tk.IntVar() for x in name_languages]
+
+    cont = 0
+    column = 0
+    row = 0
+    while(cont < len(name_languages)):
+        if row == 5:
+            row = 0
+            column += 1
+        tk.Checkbutton(frame, text=name_languages[cont], variable=variables_languages[cont], onvalue=1, offvalue=0).grid(
+            column=column, row=row, sticky='W')
+        cont += 1
+        row += 1
 
     button_select_all = tk.Button(
-        root, text="Select all", command=lambda: select_all_languages(all_languages))
-    button_select_all.grid(column=0, row=0, padx=5, pady=5, sticky='W')
+        frame_top, text="Select all", command=lambda: select_languages(variables_languages, extension_languages))
+    button_select_all.grid(column=0, row=0, sticky='W')
 
-    tk.Checkbutton(frame, text="Spanish", variable=language_es, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es')).grid(column=0, row=0, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-AR", variable=language_es_ar, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-AR')).grid(column=0, row=1, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-CL", variable=language_es_cl, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-cl')).grid(column=0, row=2, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-UY", variable=language_es_uy, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-UY')).grid(column=0, row=3, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-CO", variable=language_es_co, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-CO')).grid(column=0, row=4, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-EC", variable=language_es_ec, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-ec')).grid(column=0, row=5, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-PA", variable=language_es_pa, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-pa')).grid(column=1, row=0, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-PE", variable=language_es_pe, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-PE')).grid(column=1, row=1, sticky='W')
-
-    tk.Checkbutton(frame, text="Spanish-VE", variable=language_es_ve, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'es-VE')).grid(column=1, row=2, sticky='W')
-
-    tk.Checkbutton(frame, text="English", variable=language_en, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'en')).grid(column=1, row=3, sticky='W')
-
-    tk.Checkbutton(frame, text="Deutsche", variable=language_de, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'de')).grid(column=1, row=4, sticky='W')
-
-    tk.Checkbutton(frame, text="French", variable=language_fr, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'fr')).grid(column=1, row=5, sticky='W')
-
-    tk.Checkbutton(frame, text="Italian", variable=language_it, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'it')).grid(column=2, row=0, sticky='W')
-
-    tk.Checkbutton(frame, text="Portuguese", variable=language_pt, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'pt')).grid(column=2, row=1, sticky='W')
-
-    tk.Checkbutton(frame, text="Norwegian", variable=language_no, onvalue=1,
-                   offvalue=0, command=lambda: select_languages(languages, 'no')).grid(column=2, row=2, sticky='W')
+    button_deselect_all = tk.Button(
+        frame_top, text="Deselect all", command=lambda: deselect_languages(variables_languages, extension_languages))
+    button_deselect_all.grid(column=1, row=0, sticky='W')
 
     file_name_to_translate = tk.StringVar()
 
@@ -185,10 +142,10 @@ def ventana_principal():
 
     button_search_file = tk.Button(
         root, text="Search", command=lambda: browse_file(file_name_to_translate))
-    button_search_file.grid(column=1, row=2, padx=5, pady=5)
+    button_search_file.grid(column=1, row=2, padx=5, pady=5, sticky='W')
 
     button_translate = tk.Button(
-        root, text="Translate", command=lambda: loop_files_function(file_name_to_translate.get().split('.aspx.resx')[0], languages))
+        root, text="Translate", command=lambda: loop_files_function(file_name_to_translate.get().split('.aspx.resx')[0], extension_languages, variables_languages))
     button_translate.grid(column=0, row=3, padx=5, pady=5)
 
     root.mainloop()
