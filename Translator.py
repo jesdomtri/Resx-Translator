@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from googletrans import Translator
-import tkinter as tk
-from tkinter import filedialog
-from tkinter import messagebox
-import re
-import time
 import logging
+import re
+import threading
+import time
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
+from googletrans import Translator
 
 
 def translate_text_function(line, dst):
@@ -17,13 +17,14 @@ def translate_text_function(line, dst):
     return value
 
 
-def loop_files_function(title, extension_languages, variables_languages):
+def loop_files_function(new_window, title, extension_languages, variables_languages):
     try:
         languages = check_languages(extension_languages, variables_languages)
         if len(languages) > 0 and title != '':
             start_time = time.time()
             for language in languages:
                 create_file_function(title, language)
+            new_window.destroy()
             messagebox.showinfo("Translation completed", "Translations completed successfully in %s seconds." % str(
                 round((time.time() - start_time), 4)))
         else:
@@ -137,7 +138,7 @@ def ventana_principal():
     file_name_to_translate = tk.StringVar()
 
     name_file = tk.Entry(
-        root, width=40, textvariable=file_name_to_translate)
+        root, width=40, state='disabled', textvariable=file_name_to_translate)
     name_file.grid(column=0, row=2, padx=5, pady=5)
 
     button_search_file = tk.Button(
@@ -145,8 +146,26 @@ def ventana_principal():
     button_search_file.grid(column=1, row=2, padx=5, pady=5, sticky='W')
 
     button_translate = tk.Button(
-        root, text="Translate", command=lambda: loop_files_function(file_name_to_translate.get().split('.aspx.resx')[0], extension_languages, variables_languages))
+        root, text="Translate", command=lambda: translate(file_name_to_translate.get().split('.aspx.resx')[0], extension_languages, variables_languages))
     button_translate.grid(column=0, row=3, padx=5, pady=5)
+
+    def translate(title, extension_languages, variables_languages):
+        new_window = tk.Toplevel(root)
+
+        root.eval(f'tk::PlaceWindow {str(new_window)} center')
+
+        new_window.title("Progress...")
+        new_window.geometry("400x50")
+
+        tk.Label(new_window,  text="Translation in progress...").pack()
+
+        progressbar = ttk.Progressbar(new_window, mode='indeterminate')
+        progressbar.pack()
+        progressbar.start()
+
+        new_thread = threading.Thread(target=loop_files_function, args=(
+            new_window, title, extension_languages, variables_languages))
+        new_thread.start()
 
     root.mainloop()
 
