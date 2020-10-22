@@ -2,19 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import os
 import re
 import threading
 import time
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from googletrans import Translator
-
-
-def translate_text_function(line, dst):
-    text = line.split('<value>')[1].split('</value>')[0]
-    translatedValue = Translator().translate(text, src='es', dest=dst)
-    value = re.sub(text, translatedValue.text, line)
-    return value
 
 
 def loop_files_function(new_window, title, extension_languages, variables_languages):
@@ -25,8 +19,10 @@ def loop_files_function(new_window, title, extension_languages, variables_langua
             for language in languages:
                 create_file_function(title, language)
             new_window.destroy()
-            messagebox.showinfo("Translation completed", "Translations completed successfully in %s seconds." % str(
-                round((time.time() - start_time), 4)))
+            info = "Translations completed successfully in " + \
+                str(round((time.time() - start_time), 4)) + " seconds." + "\nSome keys may not have been translated." + \
+                "\nCheck if you have new files called 'text_pending_lang.txt'."
+            messagebox.showinfo("Translation completed", info)
         else:
             if len(languages) == 0 and title != '':
                 messagebox.showwarning(
@@ -37,31 +33,43 @@ def loop_files_function(new_window, title, extension_languages, variables_langua
     except Exception as e:
         logging.basicConfig(filename='app.log', filemode='w',
                             format='%(name)s - %(levelname)s - %(message)s\n')
-        logging.warning(e)
+        logging.exception(e)
+        new_window.destroy()
         messagebox.showerror(
-            "Error", "An unexpected error has occurred. A log was created.\nContact the creator of this application: jesdomtri@gmail.com")
+            "Error", "An unexpected error has occurred. \nA log was created with the exception.")
 
 
 def create_file_function(title, language):
     originalFile = open(title + ".aspx.resx", "r", encoding="utf-8")
     newFile = open(title + '.aspx.' + language +
                    '.resx', "w+", encoding="utf-8")
+    textWithoutTranslateFile = open(
+        "text_pending_" + language + ".txt", "w+", encoding="utf-8")
     if 'es' in language:
         for line in originalFile:
             newFile.write(line)
     else:
-        translate_file_function(originalFile, newFile, language)
+        translate_file_function(originalFile, newFile,
+                                textWithoutTranslateFile, language)
     newFile.close()
+    textWithoutTranslateFile.close()
+    if(os.stat("text_pending_" + language + ".txt").st_size == 0):
+        os.remove("text_pending_" + language + ".txt")
 
 
-def translate_file_function(originalFile, newFile, language):
+def translate_file_function(originalFile, newFile, textWithoutTranslateFile, language):
     commentFinished = False
     resheaderReached = False
     dataReached = False
     for line in originalFile:
         if commentFinished and resheaderReached and dataReached:
             if '<value>' in line:
-                newFile.write(translate_text_function(line, language))
+                try:
+                    newFile.write(translate_text_function(line, language))
+                except:
+                    textWithoutTranslateFile.write(
+                        line.split('<value>')[1].split('</value>')[0] + "\n")
+                    newFile.write(line)
             else:
                 newFile.write(line)
         else:
@@ -72,6 +80,13 @@ def translate_file_function(originalFile, newFile, language):
             if '<data' in line and resheaderReached:
                 dataReached = True
             newFile.write(line)
+
+
+def translate_text_function(line, dst):
+    text = line.split('<value>')[1].split('</value>')[0]
+    translatedValue = Translator().translate(text, src='es', dest=dst)
+    value = re.sub(text, translatedValue.text, line)
+    return value
 
 
 def browse_file(file_name_to_translate):
