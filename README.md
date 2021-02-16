@@ -1,4 +1,4 @@
-# Resx-Translator
+# Resx-Translator (Doesn't work now)
 
 This program translates resx files to a number of selected languages.
 It's very simple to use, so I doubt that it requires instructions or screenshots explaining how it works.
