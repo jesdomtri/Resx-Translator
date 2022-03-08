@@ -40,52 +40,53 @@ def loop_files_function(new_window, title, extension_languages, variables_langua
 
 
 def create_file_function(title, language):
-    originalFile = open(title + ".aspx.resx", "r", encoding="utf-8")
-    newFile = open(title + '.aspx.' + language +
-                   '.resx', "w+", encoding="utf-8")
-    textWithoutTranslateFile = open(
+    original_file = open(title + ".aspx.resx", "r", encoding="utf-8")
+    new_file = open(title + '.aspx.' + language +
+                    '.resx', "w+", encoding="utf-8")
+    text_without_translate_file = open(
         "text_pending_" + language + ".txt", "w+", encoding="utf-8")
     if 'es' in language:
-        for line in originalFile:
-            newFile.write(line)
+        for line in original_file:
+            new_file.write(line)
     else:
-        translate_file_function(originalFile, newFile,
-                                textWithoutTranslateFile, language)
-    newFile.close()
-    textWithoutTranslateFile.close()
+        translate_file_function(original_file, new_file,
+                                text_without_translate_file, language)
+    new_file.close()
+    text_without_translate_file.close()
     if(os.stat("text_pending_" + language + ".txt").st_size == 0):
         os.remove("text_pending_" + language + ".txt")
 
 
 def translate_file_function(original_file, new_file, text_without_translate_file, language):
-    commentFinished = False
-    resheaderReached = False
-    dataReached = False
+    value_name = '<value>'
+    comment_finished = False
+    resheader_reached = False
+    data_reached = False
     for line in original_file:
-        if commentFinished and resheaderReached and dataReached:
-            if '<value>' in line:
+        if comment_finished and resheader_reached and data_reached:
+            if value_name in line:
                 try:
                     new_file.write(translate_text_function(line, language))
-                except:
+                except Exception as e:
                     text_without_translate_file.write(
-                        line.split('<value>')[1].split('</value>')[0] + "\n")
+                        line.split(value_name)[1].split(value_name)[0] + "\n" + e)
                     new_file.write(line)
             else:
                 new_file.write(line)
         else:
             if '-->' in line:
-                commentFinished = True
-            if '<resheader' in line and commentFinished:
-                resheaderReached = True
-            if '<data' in line and resheaderReached:
-                dataReached = True
+                comment_finished = True
+            if '<resheader' in line and comment_finished:
+                resheader_reached = True
+            if '<data' in line and resheader_reached:
+                data_reached = True
             new_file.write(line)
 
 
 def translate_text_function(line, dst):
     text = line.split('<value>')[1].split('</value>')[0]
-    translatedValue = Translator().translate(text, src='es', dest=dst)
-    value = re.sub(text, translatedValue.text, line)
+    translated_value = Translator().translate(text, src='es', dest=dst)
+    value = re.sub(text, translated_value.text, line)
     return value
 
 
