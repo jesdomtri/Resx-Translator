@@ -1,4 +1,5 @@
 # Resx-Translator (DEPRECATED)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jesdomtri_Resx-Translator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jesdomtri_Resx-Translator)
 
 This program translates resx files to a number of selected languages.
 It's very simple to use, so I doubt that it requires instructions or screenshots explaining how it works.
