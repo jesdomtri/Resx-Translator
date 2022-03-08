@@ -57,21 +57,21 @@ def create_file_function(title, language):
         os.remove("text_pending_" + language + ".txt")
 
 
-def translate_file_function(originalFile, newFile, textWithoutTranslateFile, language):
+def translate_file_function(original_file, new_file, text_without_translate_file, language):
     commentFinished = False
     resheaderReached = False
     dataReached = False
-    for line in originalFile:
+    for line in original_file:
         if commentFinished and resheaderReached and dataReached:
             if '<value>' in line:
                 try:
-                    newFile.write(translate_text_function(line, language))
+                    new_file.write(translate_text_function(line, language))
                 except:
-                    textWithoutTranslateFile.write(
+                    text_without_translate_file.write(
                         line.split('<value>')[1].split('</value>')[0] + "\n")
-                    newFile.write(line)
+                    new_file.write(line)
             else:
-                newFile.write(line)
+                new_file.write(line)
         else:
             if '-->' in line:
                 commentFinished = True
@@ -79,7 +79,7 @@ def translate_file_function(originalFile, newFile, textWithoutTranslateFile, lan
                 resheaderReached = True
             if '<data' in line and resheaderReached:
                 dataReached = True
-            newFile.write(line)
+            new_file.write(line)
 
 
 def translate_text_function(line, dst):
@@ -95,12 +95,12 @@ def browse_file(file_name_to_translate):
     file_name_to_translate.set(file_dialog)
 
 
-def select_languages(variables_languages, extension_languages):
+def select_languages(variables_languages):
     for i in range(len(variables_languages)):
         variables_languages[i].set(1)
 
 
-def deselect_languages(variables_languages, extension_languages):
+def unselect_languages(variables_languages):
     for i in range(len(variables_languages)):
         variables_languages[i].set(0)
 
@@ -143,12 +143,12 @@ def ventana_principal():
         row += 1
 
     button_select_all = tk.Button(
-        frame_top, text="Select all", command=lambda: select_languages(variables_languages, extension_languages))
+        frame_top, text="Select all", command=lambda: select_languages(variables_languages))
     button_select_all.grid(column=0, row=0, sticky='W')
 
-    button_deselect_all = tk.Button(
-        frame_top, text="Deselect all", command=lambda: deselect_languages(variables_languages, extension_languages))
-    button_deselect_all.grid(column=1, row=0, sticky='W')
+    button_unselect_all = tk.Button(
+        frame_top, text="Unselect all", command=lambda: unselect_languages(variables_languages))
+    button_unselect_all.grid(column=1, row=0, sticky='W')
 
     file_name_to_translate = tk.StringVar()
 
